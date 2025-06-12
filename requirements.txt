@@ -1,8 +1,9 @@
-streamlit =1.45.1
-opencv-python = 4.11.0
-numpy = 1.26.4
-tensorflow = 2.19.0
-keras = 3.10.0
-mediapipe = 0.10.21
-joblib = 1.5.1
-pillow = 11.2.1
+streamlit==1.45.1
+opencv-python==4.11.0
+numpy==1.26.4
+tensorflow==2.19.0
+keras==3.10.0
+mediapipe==0.10.21
+joblib==1.5.1
+pillow==11.2.1
+
