@@ -119,7 +119,6 @@ class SignLanguageTranslator:
                     st.error("❌ Keras model file not found")
                     return False
                 
-                # Load label encoder
                 if os.path.exists("label_encoder (1).pkl"):
                     self.label_encoder = joblib.load("label_encoder (1).pkl")
                     st.success("✅ Label encoder loaded successfully")
@@ -152,11 +151,9 @@ class SignLanguageTranslator:
         
         while len(landmarks) < 126:
             landmarks.append(0.0)
-        
         return landmarks[:126]
     
     def predict_sign(self, landmarks: List[float]) -> Tuple[str, float]:
-        """Predict sign from landmarks"""
         try:
             if len(landmarks) != 126:
                 return "Unknown", 0.0
@@ -167,9 +164,7 @@ class SignLanguageTranslator:
             prediction = self.model.predict(input_data, verbose=0)
             confidence = np.max(prediction)
             predicted_class = np.argmax(prediction)
-            
             predicted_label = self.label_encoder.inverse_transform([predicted_class])[0]
-            
             self.total_predictions += 1
             return predicted_label, confidence
             
@@ -178,7 +173,6 @@ class SignLanguageTranslator:
             return "Error", 0.0
     
     def update_prediction_tracking(self, predicted_label: str, confidence: float):
-        """Update prediction tracking and return confirmed letter"""
         confirmed_letter = None
         
         if confidence > self.confidence_threshold:
@@ -198,7 +192,6 @@ class SignLanguageTranslator:
         return confirmed_letter
 
 def initialize_session_state():
-    """Initialize Streamlit session state variables"""
     if "confirmed_text" not in st.session_state:
         st.session_state.confirmed_text = ""
     if "translator" not in st.session_state:
@@ -212,7 +205,6 @@ def initialize_session_state():
         st.session_state.text_update_queue = queue.Queue()
 
 def render_main_interface():
-    """Render the main application interface"""
     st.markdown("""
     <div class="main-header">
         <h1>Unspoken:  Sign Language Translator</h1>
@@ -239,7 +231,6 @@ def render_main_interface():
         render_control_panel()
 
 def process_text_updates():
-    """Process pending text updates from the queue"""
     try:
         while not st.session_state.text_update_queue.empty():
             new_letter = st.session_state.text_update_queue.get_nowait()
@@ -248,7 +239,6 @@ def process_text_updates():
         pass
 
 def render_camera_interface():
-    """Render camera interface and video processing"""
     col1, col2, col3 = st.columns([1, 1, 1])
     
     with col1:
